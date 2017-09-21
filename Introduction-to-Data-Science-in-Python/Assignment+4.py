@@ -53,14 +53,24 @@ def get_list_of_university_towns():
     3. Depending on how you read the data, you may need to remove newline character '\n'. '''
     
     data = []
-    with open("university_towns.txt") as file: 
+    state = None
+    state_towns = []
+    with open('university_towns.txt') as file:
         for line in file:
-            data.append(line[:-1])
-    
-    
-    return data
+            thisLine = line[:-1]
+            if thisLine[-6:] == '[edit]':
+                state = thisLine[:-6]
+                continue
+            if '(' in line:
+                town = thisLine[:thisLine.index('(')-1]
+                state_towns.append([state,town])
+            else:
+                town = thisLine
+                state_towns.append([state,town])
+            data.append(thisLine)
+    df = pd.DataFrame(state_towns,columns = ['State','RegionName'])
+    return df
 
-get_list_of_university_towns()
 
 
 # In[ ]:
